@@ -1,0 +1,16 @@
+post https://trenck.net/blog/authelia-two-file-access-control-bug/
+post https://trenck.net/blog/cloudflare-stuck-dns-publish-fix/
+post https://trenck.net/blog/monitoring-without-alerting-is-a-museum/
+post https://trenck.net/blog/security-rollouts-fail-on-people/
+post https://trenck.net/blog/ticket-metrics-measure-activity-not-health/
+post https://trenck.net/blog/watchtower-to-renovate/
+post https://trenck.net/blog/welcome-to-the-blog/
+pub arlytrenck
+pub homelab-public
+pub sysadmin-linux
+pub sysadmin-windows
+repo arlytrenck cd3c1f34b48e014b2a482edb6606db38d284d12b
+repo homelab-public db46c140724536c06aefc8d8f04eea1b1f8ef933
+repo sysadmin-linux ddf6ec27b0a200ddfa8c9fcbe8f5258f33293944
+repo sysadmin-windows e188a042831ee7a73dac11893f490a551040e952
+stamp 2026-09-21

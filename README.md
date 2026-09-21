@@ -1,7 +1,7 @@
 <h1 align="center">/arly</h1>
 
 <p align="center">
-  <img src="assets/banner.png" alt="Arly Trenck, IT Systems Engineer and Infrastructure Architect" width="640" />
+  <img src="assets/portrait.jpg" alt="Arly Trenck, IT Systems Engineer and Infrastructure Architect" width="280" />
 </p>
 
 <h3 align="center">Build systems that hold up, and automate the work around them</h3>
@@ -56,7 +56,7 @@ Where my public material does not cover a question, the skill says so and falls 
 
 ## Keeping it current
 
-The knowledge files are refreshed from what I publish: new blog posts, and changes to the public repos. A scheduled job checks the public sources daily and only runs an agent when something is new. The agent can only edit three files, and the result is checked before it is pushed. The rules and the runner are described in [`REFRESH.md`](REFRESH.md). Merge and tighten first, append only when something is genuinely new.
+The knowledge files are refreshed from what I publish: new blog posts, and changes to the public repos. A scheduled job checks the public sources daily and notifies me when a new post or a newly public repo means the knowledge files are behind. I do the refresh myself, with `scripts/refresh.sh` fetching what is new. The rules and the steps are in [`REFRESH.md`](REFRESH.md). Merge and tighten first, append only when something is genuinely new.
 
 ## Layout
 
@@ -69,7 +69,9 @@ The knowledge files are refreshed from what I publish: new blog posts, and chang
 | `VOICE.md` | Writing profile for when the agent writes as me. |
 | `REFRESH.md` | How the knowledge files get updated, and what is off limits. |
 | `scripts/check.sh` | Pre-commit guard: no em dashes, no private names, no secrets or LAN addresses. |
-| `scripts/refresh.sh` | Unattended refresh: gate, fetch, agent, verify, commit, push. |
+| `scripts/refresh.sh` | `check` (what is new), `prepare` (fetch it), `baseline` (record it). Never edits the knowledge files. |
+| `state/baseline.state` | The public sources as of the last refresh. |
+| `CLAUDE.md` | Working notes for a Claude session opened in this repo. |
 
 ## Contributing
 
