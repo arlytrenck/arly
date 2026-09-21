@@ -56,7 +56,7 @@ Where my public material does not cover a question, the skill says so and falls 
 
 ## Keeping it current
 
-The knowledge files are refreshed from what I publish: new blog posts, and changes to the public repos. The procedure and rules are in [`REFRESH.md`](REFRESH.md). Merge and tighten first, append only when something is genuinely new.
+The knowledge files are refreshed from what I publish: new blog posts, and changes to the public repos. A scheduled job checks the public sources daily and only runs an agent when something is new. The agent can only edit three files, and the result is checked before it is pushed. The rules and the runner are described in [`REFRESH.md`](REFRESH.md). Merge and tighten first, append only when something is genuinely new.
 
 ## Layout
 
@@ -69,6 +69,7 @@ The knowledge files are refreshed from what I publish: new blog posts, and chang
 | `VOICE.md` | Writing profile for when the agent writes as me. |
 | `REFRESH.md` | How the knowledge files get updated, and what is off limits. |
 | `scripts/check.sh` | Pre-commit guard: no em dashes, no private names, no secrets or LAN addresses. |
+| `scripts/refresh.sh` | Unattended refresh: gate, fetch, agent, verify, commit, push. |
 
 ## Contributing
 

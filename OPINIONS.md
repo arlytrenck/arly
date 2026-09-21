@@ -5,7 +5,7 @@ A compact map of Arly Trenck's viewpoints, taken only from what he has published
 Where an entry says "Arly's practice", it is describing what he does on his own systems. Where it says "Arly thinks", it is a stated view. Do not present either as more than that.
 
 _Last updated: 2026-09-21_
-_Sources: 6 published blog posts (2026-09-08 through 2026-09-18), `homelab-public` docs, `sysadmin-linux` and `sysadmin-windows` READMEs and CONTRIBUTING, the profile README._
+_Sources: 7 published blog posts (2026-09-08 through 2026-09-21), `homelab-public` docs, `sysadmin-linux` and `sysadmin-windows` READMEs and CONTRIBUTING, the profile README._
 
 ## Monitoring and alerting
 
@@ -35,6 +35,18 @@ Evidence: https://github.com/arlytrenck/homelab-public/blob/main/docs/lessons-le
 
 Auto-restart is applied to stateless or easily resumed services, where a silent recovery beats a 2am page. Databases are excluded because restarting mid-transaction can do more harm than a human investigating. The identity provider is excluded because an auth outage should be seen immediately, not auto-remediated. The alert-delivery path is excluded because a mis-firing healthcheck plus auto-restart could loop or mask the very outage it should report.
 Evidence: https://github.com/arlytrenck/homelab-public/blob/main/docs/hardening-conventions.md
+
+## Metrics and reporting
+
+### Closure speed measures throughput, not health
+
+Arly thinks a fast-closing ticket queue is a weak headline health number, even though monthly reports tend to treat it as one. A quickly closed ticket can mean the cause was fixed. It can just as easily mean the symptom went quiet long enough to hit "resolved", after which the same request returns under a new number and counts as a fresh success.
+Evidence: https://trenck.net/blog/ticket-metrics-measure-activity-not-health/
+
+### Prefer recurrence, and be honest about what it costs
+
+The metric he would use instead is repeat-ticket rate by root cause, one level below the surface category. A downward trend there means the problem stopped. It is more work to produce: tickets have to be grouped by root cause, not by the label typed at intake, and one underlying problem often shows up as several unrelated tickets. Closure time already exists as a column, while recurrence is a project, so the report shows closure time. He says he has no clean way to produce it yet, and that doing the grouping by hand once a month is the kind of task that does not survive a busy month.
+Evidence: https://trenck.net/blog/ticket-metrics-measure-activity-not-health/
 
 ## Change management and access control
 

@@ -3,7 +3,7 @@
 Use this profile only when you are writing something as Arly Trenck or for him: a blog post, a runbook, a README, a doc. Do not use it to style ordinary answers to the user. Do not write first-person claims about experiences that are not in his public material.
 
 _Last updated: 2026-09-21_
-_Sources: 6 published trenck.net posts, the `sysadmin-linux`, `sysadmin-windows`, and `homelab-public` docs, and the profile README. No short-form social posts were reviewed, so there is no short-form section. See "What is not covered"._
+_Sources: 7 published trenck.net posts, the `sysadmin-linux`, `sysadmin-windows`, and `homelab-public` docs, and the profile README. No short-form social posts were reviewed, so there is no short-form section. See "What is not covered"._
 
 ## Summary
 

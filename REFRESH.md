@@ -43,15 +43,23 @@ How the knowledge files in this repo get updated. Follow this when refreshing by
 - No AI attribution in commit messages or pull requests. That is the convention across every `arlytrenck/*` repo.
 - If nothing new was published since the last refresh, make no commit.
 
-## A ready prompt for an automation
+## The unattended runner
 
-```
-Refresh the arlytrenck/arly knowledge base.
+`scripts/refresh.sh` does the whole refresh on a schedule. The scheduler is an n8n Schedule Trigger that runs it over SSH. The script works in stages so the agent step is small and boxed in:
 
-Read REFRESH.md first and follow it exactly. Check the sources it lists for
-anything published since the "Last updated" date in OPINIONS.md. Merge new
-material into OPINIONS.md and TOOLS.md, tightening existing entries before
-adding new ones. Do not use anything on the off-limits list. Run
-scripts/check.sh. If the check passes and something changed, commit and push
-to main. If nothing new was published, do nothing.
-```
+1. **Gate.** It snapshots the public sources: post URLs from the feed, the HEAD commit of each public repo, and the list of public repos. If that matches the saved baseline, it exits. Most days nothing runs and nothing costs anything.
+2. **Fetch.** It downloads only what changed into `.sources/` (new post text, changed repo checkouts, commit logs) and writes `.sources/CHANGES.md`.
+3. **Agent.** It runs `ARLY_AGENT_CMD` inside the clone with a fixed prompt. The agent reads `.sources/` and edits `OPINIONS.md`, `TOOLS.md` and `VOICE.md`. It gets no network and no shell.
+4. **Verify.** Any change to another file, any new file, a file that shrank by more than 30 percent, or a failing `scripts/check.sh` resets the tree and exits non-zero. Nothing is pushed.
+5. **Commit and push.** Only then does it commit, push, and move the baseline. A failed run leaves the baseline alone, so the next run tries again.
+
+Exit codes: `0` nothing new or refreshed, `1` a check failed, `2` setup problem or no baseline, `3` a public source could not be read. A non-zero exit is meant to show up as a failed n8n execution.
+
+Install on the host that runs the schedule:
+
+1. Make sure the host can push to `arlytrenck/arly` (a deploy key with write access, scoped to this repo only).
+2. Set `ARLY_AGENT_CMD` for the SSH command. It must read a prompt on stdin, edit files in its working directory, and be restricted to file read and edit tools.
+3. Run `scripts/refresh.sh -s` once, while the knowledge files are current, to record the baseline.
+4. Run `scripts/refresh.sh -n` to see what a run would do without changing anything.
+
+`-f` forces a run when nothing looks new. Never run the agent step by hand against an unclean clone.

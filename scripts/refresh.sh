@@ -70,16 +70,36 @@ main() {
   fi
 
   mkdir -p "$state_dir" || return 2
-  local lock="$state_dir/lock"
-  if ! mkdir "$lock" 2>/dev/null; then
-    log "another run holds $lock, skipping" >&2
-    return 2
-  fi
 
-  local tmp
-  tmp=$(mktemp -d) || { rmdir "$lock"; return 2; }
-  cleanup() { rm -rf "$tmp" "$workdir/.sources" 2>/dev/null; rmdir "$lock" 2>/dev/null; }
+  # The EXIT trap runs after main returns, when locals are gone, so the
+  # variables it needs are globals.
+  RF_LOCK="$state_dir/lock"
+  RF_TMP=""
+  RF_SRC="$workdir/.sources"
+  cleanup() {
+    [ -n "${RF_TMP:-}" ] && rm -rf "$RF_TMP"
+    rm -rf "${RF_SRC:-}" 2>/dev/null
+    rm -rf "${RF_LOCK:-}" 2>/dev/null
+  }
+
+  # A lock left by a killed run (its PID is gone) is taken over, not obeyed.
+  if ! mkdir "$RF_LOCK" 2>/dev/null; then
+    local holder
+    holder=$(cat "$RF_LOCK/pid" 2>/dev/null || true)
+    if [ -n "$holder" ] && kill -0 "$holder" 2>/dev/null; then
+      log "another run (pid $holder) holds $RF_LOCK, skipping" >&2
+      RF_LOCK=""
+      return 2
+    fi
+    log "taking over a stale lock (pid ${holder:-unknown} is not running)"
+    rm -rf "$RF_LOCK"
+    mkdir "$RF_LOCK" 2>/dev/null || { log "cannot take the lock" >&2; RF_LOCK=""; return 2; }
+  fi
+  echo "$$" > "$RF_LOCK/pid"
   trap cleanup EXIT
+
+  RF_TMP=$(mktemp -d) || return 2
+  local tmp="$RF_TMP"
 
   # ---- 1. read the public sources into a state snapshot ------------------
   local cur="$tmp/current.state"
