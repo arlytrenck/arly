@@ -36,7 +36,7 @@ The `/arly` skill file is thin on purpose. It loads four files from this repo an
 skills/arly/SKILL.md      loads the four files below (local clone first, raw GitHub otherwise)
       │
       ▼
-ENTRY.md      how to route the question and how to work a task
+ENTRY.md      routes a situation to the right runbook, and how to answer
 TOOLS.md      my public repos, and which script or doc solves which problem
 OPINIONS.md   my held views, each with a link to where I wrote it down
 VOICE.md      how I write, used only when writing as me
@@ -61,7 +61,7 @@ The knowledge files are refreshed from what I publish: new blog posts, and chang
 | Path | What it is |
 |------|------------|
 | `skills/arly/SKILL.md` | The installable skill. Loads the files below. |
-| `ENTRY.md` | Routing and task workflows. |
+| `ENTRY.md` | Routes a situation (incident, change, patching, rotation, backups) to my runbook for it. |
 | `TOOLS.md` | Public tools and what each one solves. |
 | `OPINIONS.md` | Durable viewpoints, with evidence links. |
 | `VOICE.md` | Writing profile for when the agent writes as me. |
