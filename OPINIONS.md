@@ -33,7 +33,7 @@ Evidence: https://github.com/arlytrenck/homelab-public/blob/main/docs/lessons-le
 
 ### Scope self-healing deliberately
 
-Auto-restart is applied to stateless or easily resumed services, where a silent recovery beats a 2am page. Databases are excluded because restarting mid-transaction can do more harm than a human investigating. The identity provider is excluded because an auth outage should be seen immediately, not auto-remediated. The alert-delivery path is excluded because a mis-firing healthcheck plus auto-restart could loop or mask the very outage it should report.
+Auto-restart is applied to stateless or easily resumed services, where a silent recovery beats a 2am page. Databases are excluded because restarting mid-transaction can do more harm than a human investigating. The identity provider (Authelia) is excluded because an auth outage should be seen immediately, not auto-remediated. The alert-delivery path is excluded because a mis-firing healthcheck plus auto-restart could loop or mask the very outage it should report.
 Evidence: https://github.com/arlytrenck/homelab-public/blob/main/docs/hardening-conventions.md
 
 ## Metrics and reporting
@@ -74,7 +74,7 @@ Evidence: https://trenck.net/blog/security-rollouts-fail-on-people/
 
 ### The default is the thing to go check
 
-Two lessons from his own systems point the same way. Authelia's `default_policy` is deny, so a new subdomain with no matching rule is locked out for everyone. Container ports default to `0.0.0.0`, and one unauthenticated remote-desktop port sat exposed on the LAN until an audit caught it. His rule: find out what the default is, then look at what is actually bound or matched, on a schedule.
+Two lessons from his own systems point the same way. Authelia's `default_policy` is deny, so a new subdomain with no matching rule is locked out for everyone. Container ports default to `0.0.0.0`, and a media-library manager's VNC port (5900) sat unauthenticated on `0.0.0.0`, reachable from the LAN, until an audit caught it. His rule: find out what the default is, then look at what is actually bound or matched, on a schedule.
 Evidence: https://trenck.net/blog/authelia-two-file-access-control-bug/ and https://github.com/arlytrenck/homelab-public/blob/main/docs/lessons-learned.md
 
 ### One baseline on every service
@@ -96,7 +96,7 @@ Evidence: https://trenck.net/blog/authelia-two-file-access-control-bug/
 
 ### Fixing one instance does not tell you the fix generalized
 
-When the same bug appeared twice in a day, he fixed both and moved on without asking why. Later he found the same gap on three more vhosts. Arly's takeaway is that having fixed something tells you one instance is gone and says nothing about whether the cause is. He now keeps a checklist next to the most recently added vhost listing both halves of the change.
+When the same bug appeared twice in a day, he fixed both and moved on without asking why. Later he found the same gap on three more vhosts. In his words: "Having fixed something earlier tells you one instance is gone. It says nothing about whether the fix generalized." He now keeps a checklist next to the most recently added vhost listing both halves of the change.
 Evidence: https://trenck.net/blog/authelia-two-file-access-control-bug/
 
 ### Test the way a real user hits it
@@ -128,7 +128,7 @@ Evidence: https://github.com/arlytrenck/homelab-public/blob/main/docs/lessons-le
 
 ### Stop at the second fork
 
-The upstream of the Watchtower he ran is abandoned, and his stack had already moved to a community fork to keep receiving updates. Fork-hopping a second time is where he stops and picks a different tool.
+The upstream of the Watchtower he ran (`containrrr/watchtower`) is abandoned, and his stack had already moved to the community `nickfedor/*` fork to keep receiving updates. Fork-hopping a second time is where he stops and picks a different tool.
 Evidence: https://trenck.net/blog/watchtower-to-renovate/
 
 ### An update should arrive as a diff, a CI run, and a changelog
@@ -148,7 +148,7 @@ Evidence: https://trenck.net/blog/watchtower-to-renovate/
 
 ### Do not add a second tool if the first already does the job
 
-He deployed a job scheduler to get run history and a UI for cron-driven backups, then removed it the same day. The workflow tool already running could do the same job (trigger a script over SSH on a schedule, log it, alert on failure) at no extra memory. The scheduler's real advantages, multi-user RBAC and audit policies, answered a question a single-operator setup never asked.
+He deployed Rundeck to get run history and a UI for cron-driven backups, then removed it the same day. n8n, already running, could do the same job (trigger a script over SSH on a schedule, log it, alert on failure) at no extra memory. Rundeck's real advantages, multi-user RBAC and audit policies, answered a question a single-operator setup never asked.
 Evidence: https://github.com/arlytrenck/homelab-public/blob/main/docs/lessons-learned.md
 
 ## Backups and recovery

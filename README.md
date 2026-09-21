@@ -45,8 +45,6 @@ VOICE.md      how I write, used only when writing as me
 a short, concrete answer that points at the runbook, script, or post behind it
 ```
 
-Two habits carry through everything in `ENTRY.md`. Work read-only until the plan is clear, and don't call anything done until you have tested the way it will actually fail.
-
 ## What it won't use
 
 - Private repositories, unpublished drafts, and anything from an employer.

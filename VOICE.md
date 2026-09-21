@@ -29,7 +29,7 @@ These come from his own site rules and he treats them as non-negotiable.
 
 ## Common patterns
 
-- Open with the situation or the claim: "A dashboard full of green panels feels like progress, and on its own it's a museum." Or: "Caddy's Cloudflare DNS-01 plugin usually just works."
+- Open with the situation or the claim: "Watchtower ran here for a long time, and for most of that time it wasn't doing what people usually mean by 'Watchtower.'" Or: "Caddy's Cloudflare DNS-01 plugin usually just works."
 - Name the obvious suspects and show they were ruled out, then move to the mechanism.
 - Turn one incident into the general shape: "The mechanism is Authelia's, but the shape of the bug is general."
 - Separate what a control enforces from whether the outcome holds.
