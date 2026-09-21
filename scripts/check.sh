@@ -33,7 +33,7 @@ while IFS= read -r f; do
   [[ "$f" == "scripts/check.sh" ]] && continue
   files+=("$f")
 done < <(find . -type f \( -name '*.md' -o -name '*.sh' -o -name '*.json' -o -name '*.yml' -o -name '*.yaml' \) \
-  -not -path './.git/*' | sed 's|^\./||' | sort)
+  -not -path './.git/*' -not -path './.sources/*' | sed 's|^\./||' | sort)
 
 status=0
 
