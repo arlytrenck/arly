@@ -2,7 +2,7 @@
 
 Public things Arly Trenck owns: public, not archived, not a fork. Use this file to know what exists and what it is for before reaching for something else.
 
-Every repo below is under `https://github.com/arlytrenck/`. Default branch is `main`. Private repositories are intentionally not listed.
+Every repo below is under `https://github.com/arlytrenck/`. Default branch is `main`. Private repositories are intentionally not listed. `trenck.net` is a website, not a repo you can clone.
 
 ## sysadmin-linux
 
@@ -43,12 +43,29 @@ Clone it, read a script, then run it with `-h` first. Review the source before r
 | Error-rate spikes against a baseline | `log-anomaly-scan.sh` |
 | Snapshot the config so it lives in git | `system-snapshot.sh`, `nightly-git-mirror.sh` |
 | Cron and timers across the system | `cron-audit.sh` |
+| Who is on the box, who was recently, failed logins | `user-activity-report.sh` |
+| Filesystem usage and the biggest directories, non-zero exit over a threshold | `disk-usage-report.sh` |
+| Runaway or zombie processes (read-only by default) | `process-watchdog.sh` |
+| Are these systemd units active, optionally restarting failed ones | `service-health-check.sh` |
+| First-pass network sweep: interfaces, routes, sockets, DNS, reachability | `network-diagnostics.sh` |
+| Fail2ban, SELinux or AppArmor, ClamAV: present and healthy | `endpoint-protection-status-check.sh` |
+| Snapshot the active firewall ruleset (nftables, iptables, ufw) | `firewall-rules-dump.sh` |
+| Installed packages, diffed against a baseline | `package-inventory.sh` |
+| Snapshot Tailscale state as redacted JSON | `tailscale-export.sh` |
+| Export Grafana dashboards, datasources, and alerting to JSON (read-only) | `grafana-dashboard-export.sh` |
+| Apply package updates and log the result | `update-and-patch.sh` |
+| Compress and delete old logs | `log-cleanup.sh` |
+| Create, lock, or remove a local user | `user-mgmt.sh` |
+
+These change the host: `update-and-patch.sh`, `log-cleanup.sh`, `user-mgmt.sh`, and `service-health-check.sh` when it is told to restart. Read them before running them anywhere that matters.
 
 ### Docs worth knowing (Linux)
 
 Runbooks and checklists: `incident-response-runbook.md`, `disk-full-emergency-runbook.md`, `secret-rotation-runbook.md`, `privileged-access-and-break-glass-runbook.md`, `backup-3-2-1-runbook.md`, `backup-dr-testing-runbook.md`, `reverse-proxy-sso-runbook.md`, `hypervisor-major-upgrade-runbook.md`, `nas-hardening-audit-runbook.md`, `change-management-checklist.md`, `new-server-bootstrap-checklist.md`, `server-hardening-checklist.md`.
 
 Guides and templates: `troubleshooting-guide.md` with `troubleshooting-flowchart.md`, `monitoring-alerting-guide.md`, `patch-management-guide.md`, `container-security-guide.md`, `incident-postmortem-template.md`, `disaster-recovery-plan-template.md`, `single-node-homelab-reliability.md`.
+
+Also: `backup-restore-drill.md`, `database-backup-restore-guide.md`, `config-snapshots.md`, `config-as-code-repo-hygiene.md`, `container-host-tuning.md`, `reverse-proxy-and-tls.md`, `ssh-hardening-reference.md`, `mesh-vpn-remote-access.md`, `log-management-reference.md`, `capacity-planning-guide.md`.
 
 Cheatsheets: SSH, DNS, firewall (including the Docker bypass), systemd, cron and timers, rsync, TLS, git, ZFS, LVM, text processing, database CLIs, and Compose hardening. `docs/README.md` indexes everything by task.
 
@@ -80,10 +97,21 @@ Read the script, run `Get-Help` on it, then run with `-WhatIf` before you let it
 | Account lifecycle | `User-Mgmt.ps1` |
 | Patching | `Windows-Update.ps1` |
 | Hyper-V configuration export | `Export-HyperV-Config.ps1` |
+| Physical disk health and reliability counters | `Disk-Health-Check.ps1` |
+| Free space per drive and the largest folders | `Disk-Usage-Report.ps1` |
+| Snapshot the active Windows Firewall rules | `Firewall-Rules-Dump.ps1` |
+| First-pass network sweep: adapters, routing, DNS, gateway, ports | `Network-Diagnostics.ps1` |
+| Installed software, diffed against a baseline | `Package-Inventory.ps1` |
+| Recent logons, failed logons, lockouts | `User-Activity-Report.ps1` |
+| Processes over a CPU or memory threshold (`-Kill` stops them) | `Process-Watchdog.ps1` |
+| Are these services running, optionally restarting them | `Service-Health-Check.ps1` |
+| Trim old event log entries and `.log` files | `Log-Cleanup.ps1` |
 
 ### Docs worth knowing (Windows)
 
 `active-directory-reference.md`, `group-policy-reference.md`, `dns-dhcp-reference.md`, `recovery-access-and-directory-services-runbook.md`, `certificate-management-reference.md`, `endpoint-protection-guide.md`, `hyper-v-cheatsheet.md`, `powershell-cheatsheet.md`, `powershell-remoting-eventlog-reference.md`, `windows-server-bootstrap-checklist.md`, plus the same runbook and template set as the Linux repo (incident response, disk full, secret rotation, backup DR testing, change management, postmortem).
+
+Also: `windows-in-the-homelab.md`, `database-backup-restore-guide.md`, `capacity-planning-guide.md`, and cheatsheets for robocopy, scheduled tasks, Windows Firewall, networking, and storage.
 
 ## homelab-public
 
@@ -102,7 +130,7 @@ Key docs:
 - `docs/backup-strategy.md`: what is protected, how restores are verified, and the gaps it does not cover.
 - `docs/renovate.md`: image updates as reviewed pull requests.
 - `docs/runbooks/`: `add-a-service.md`, `add-a-vhost.md`, `rotate-a-secret.md`.
-- `tools/`: `check-compose.sh`, `gen-env-examples.sh`, `notify.sh`, `weekly-health-digest.sh`, `export-n8n-workflows.sh`.
+- `tools/`: `check-compose.sh`, `gen-env-examples.sh`, `notify.sh`, `weekly-health-digest.sh`, `export-n8n-workflows.sh`, `github-ci-watch.sh` (a Gotify alert only when the latest GitHub Actions run on a listed repo is red), `push-github-repos.sh` (commit-drift check and push for a set of repos, on a schedule), `seerr-pending-reminder.sh` (a Gotify nag when Seerr or Overseerr requests sit pending).
 
 ## trenck.net
 

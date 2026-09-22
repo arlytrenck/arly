@@ -5,7 +5,7 @@ A compact map of Arly Trenck's viewpoints, taken only from what he has published
 Where an entry says "Arly's practice", it is describing what he does on his own systems. Where it says "Arly thinks", it is a stated view. Do not present either as more than that.
 
 _Last updated: 2026-09-21_
-_Sources: 7 published blog posts (2026-09-08 through 2026-09-21), `homelab-public` docs, `sysadmin-linux` and `sysadmin-windows` READMEs and CONTRIBUTING, the profile README._
+_Sources: 7 published blog posts (2026-09-08 through 2026-09-21), `homelab-public` docs, `sysadmin-linux` and `sysadmin-windows` READMEs, CONTRIBUTING, and `docs/`, the profile README._
 
 ## Monitoring and alerting
 
@@ -157,6 +157,11 @@ Evidence: https://github.com/arlytrenck/homelab-public/blob/main/docs/lessons-le
 
 Arly's practice is a monthly restore drill that restores a canary set, decrypts the newest database dump, loads it into a throwaway database container, and counts rows. That is a real "does it restore", not "does the file exist". Results are pushed as a notification, and backup freshness is a metric with an alert.
 Evidence: https://github.com/arlytrenck/homelab-public/blob/main/docs/backup-strategy.md
+
+### Recovery targets are a budget, not a hope
+
+RPO (how much data loss is acceptable) and RTO (how long recovery is allowed to take) get set honestly, per service, before the backup mechanism is chosen. A 15-minute RTO for a database that takes 45 minutes to restore means the RTO is unrealistic or the restore strategy has to change, not that the number gets rounded up after the fact once reality shows up. He also fixes the order services come back in: core infrastructure and data stores before anything user-facing, and monitoring restored early enough to watch the rest of the recovery, not last.
+Evidence: https://github.com/arlytrenck/sysadmin-linux/blob/main/docs/disaster-recovery-plan-template.md
 
 ### State what the design does not protect against
 

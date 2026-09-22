@@ -6,19 +6,19 @@
 
 <h3 align="center">Build systems that hold up, and automate the work around them</h3>
 
-Hi, I'm [Arly Trenck](https://trenck.net). I'm an IT systems engineer and infrastructure architect. My day job is enterprise IT: servers, networks, identity, security, and backup across 29 offices in Connecticut, New York, and Massachusetts. At home I run a homelab the way I run production, with the config in git, one command to rebuild the host, and backups I have actually restored from.
+Hi, I'm [Arly Trenck](https://trenck.net). I'm an IT systems engineer and infrastructure architect. My day job is enterprise IT across 29 offices in Connecticut, New York, and Massachusetts. At home I run a homelab the way I run production: the config in git, one command to rebuild the host, and backups I have actually restored from.
 
-This `/arly` skill packages how I approach that work: the tools and runbooks I've published, and the opinions I've written down, so your agent can use them when it helps you with servers, networks, identity, monitoring, backups, rollouts, and troubleshooting.
+`/arly` is an agent skill built from my public runbooks, scripts, and writing. Ask it about servers, networks, identity, monitoring, backups, rollouts, or troubleshooting. It sends the situation to the right runbook, names the script that fits, and gives my view on the tradeoff. Where my public material does not cover a question, it says so and falls back to general knowledge.
 
-It only knows what I've made public. See [what it won't use](#what-it-wont-use).
-
-## Quick start
+## Install
 
 ```sh
-# install (global recommended)
-$ npx skills add arlytrenck/arly -g
+npx skills add arlytrenck/arly -g
+```
 
-# in your agent
+Then ask it something:
+
+```
 /arly why does my new reverse-proxy vhost return 403 for everyone?
 /arly how should I roll out MFA to a multi-site company?
 /arly is my backup setup actually a backup?
@@ -27,53 +27,26 @@ $ npx skills add arlytrenck/arly -g
 
 ## How it works
 
-The `/arly` skill file is thin on purpose. It loads four files from this repo and follows them.
+The skill file is thin on purpose. It loads four files from this repo, from a local clone if you are in one and from GitHub otherwise, and follows them.
 
-```
-/arly <question>
-      │
-      ▼
-skills/arly/SKILL.md      loads the four files below (local clone first, raw GitHub otherwise)
-      │
-      ▼
-ENTRY.md      routes a situation to the right runbook, and how to answer
-TOOLS.md      my public repos, and which script or doc solves which problem
-OPINIONS.md   my held views, each with a link to where I wrote it down
-VOICE.md      how I write, used only when writing as me
-      │
-      ▼
-a short, concrete answer that points at the runbook, script, or post behind it
-```
+| File | What it does |
+|------|--------------|
+| `ENTRY.md` | Routes a situation to the right runbook and sets how to answer. |
+| `TOOLS.md` | My public repos, and which script or doc solves which problem. |
+| `OPINIONS.md` | My views, each linked to where I wrote it down. |
+| `VOICE.md` | How I write. Used only when writing as me. |
 
 ## What it won't use
 
-- Private repositories, unpublished drafts, and anything from an employer.
-- Hostnames, addresses, tokens, and account details. `scripts/check.sh` scans for them before a commit.
-
-Where my public material does not cover a question, the skill says so and falls back to general knowledge.
+Private repositories, unpublished drafts, and anything from an employer stay out, along with hostnames, addresses, tokens, and account details. `scripts/check.sh` scans for them before a commit.
 
 ## Keeping it current
 
-The knowledge files are refreshed from what I publish: new blog posts, and changes to the public repos. A scheduled job checks the public sources daily and notifies me when a new post or a newly public repo means the knowledge files are behind. I do the refresh myself, with `scripts/refresh.sh` fetching what is new. The rules and the steps are in [`REFRESH.md`](REFRESH.md). Merge and tighten first, append only when something is genuinely new.
-
-## Layout
-
-| Path | What it is |
-|------|------------|
-| `skills/arly/SKILL.md` | The installable skill. Loads the files below. |
-| `ENTRY.md` | Routes a situation (incident, change, patching, rotation, backups) to my runbook for it. |
-| `TOOLS.md` | Public tools and what each one solves. |
-| `OPINIONS.md` | Durable viewpoints, with evidence links. |
-| `VOICE.md` | Writing profile for when the agent writes as me. |
-| `REFRESH.md` | How the knowledge files get updated, and what is off limits. |
-| `scripts/check.sh` | Pre-commit guard: no em dashes, no private names, no secrets or LAN addresses. |
-| `scripts/refresh.sh` | `check` (what is new), `prepare` (fetch it), `baseline` (record it). Never edits the knowledge files. |
-| `state/baseline.state` | The public sources as of the last refresh. |
-| `CLAUDE.md` | Working notes for a Claude session opened in this repo. |
+A daily check tells me when a new post or a newly public repo means the files are behind, and I refresh them by hand. [`REFRESH.md`](REFRESH.md) has the rules. `scripts/refresh.sh` finds what is new, and `scripts/coverage.sh` flags any script or file name in `TOOLS.md` and `ENTRY.md` that has drifted from the public repos.
 
 ## Contributing
 
-This is my own knowledge base, so it does not take pull requests. Bug reports, corrections, and suggestions are welcome as issues.
+This is my own knowledge base, so it does not take pull requests. Issues with corrections or suggestions are welcome.
 
 ## Credit
 

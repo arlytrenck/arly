@@ -5,9 +5,9 @@ The user has asked you to apply Arly Trenck's approach to their question or task
 ## Arly's knowledge
 
 - `TOOLS.md`: the public repos, and which script, runbook, or doc solves which problem.
-- `OPINIONS.md`: held views on monitoring, change management, hardening, backups, tooling, documentation, and automation. Use it to inform judgment and tradeoffs.
+- `OPINIONS.md`: held views on monitoring and alerting, metrics, change management and access control, hardening and secrets, troubleshooting, tooling and dependencies, backups, and documentation. Use it to inform judgment and tradeoffs.
 - `VOICE.md`: how Arly writes. Use it only when you are writing something as Arly or for Arly (a blog post, a runbook, a README). Do not use it to style ordinary answers.
-- His runbooks, in two public repos. Section "Procedures" below says which one fits which situation.
+- His runbooks, in three public repos (`sysadmin-linux`, `sysadmin-windows`, `homelab-public`). Section "Procedures" below says which one fits which situation.
 
 ## How to answer
 
@@ -23,7 +23,7 @@ The user has asked you to apply Arly Trenck's approach to their question or task
 Find the situation, read the runbook it names, and follow its steps in order. Fetch it from GitHub:
 
 - Linux: `https://raw.githubusercontent.com/arlytrenck/sysadmin-linux/main/docs/<file>`
-- Windows servers: the same file name in `https://raw.githubusercontent.com/arlytrenck/sysadmin-windows/main/docs/<file>`, where it exists. The incident, change, patch, secret rotation, and backup testing docs all have Windows versions.
+- Windows servers: the same file name in `https://raw.githubusercontent.com/arlytrenck/sysadmin-windows/main/docs/<file>`, where it exists. Most rows below have one. For a new server use `windows-server-bootstrap-checklist.md` instead, and for being unable to get into a Windows or Active Directory system use `recovery-access-and-directory-services-runbook.md` instead. The reverse proxy, backup-design, hypervisor-upgrade, and NAS-audit runbooks exist only in `sysadmin-linux`; the last two describe single-node hardware a Windows Server role does not have, so there is nothing to substitute. The disaster-recovery-plan template and the disk-full runbook both have a same-name Windows version, so the general rule covers them.
 - Homelab and Docker Compose: `https://raw.githubusercontent.com/arlytrenck/homelab-public/main/docs/runbooks/<file>`
 
 Read only the runbook that matches. If it cannot be fetched, use the summary below and say so. The summaries are the shape of each runbook, not a substitute for it.
@@ -31,13 +31,18 @@ Read only the runbook that matches. If it cannot be fetched, use the summary bel
 | Situation | Runbook |
 |-----------|---------|
 | Something is wrong now | `incident-response-runbook.md`, then `troubleshooting-flowchart.md` if the category is unknown |
+| A filesystem is full or nearly full | `disk-full-emergency-runbook.md` |
 | Cannot get in, or need emergency access | `privileged-access-and-break-glass-runbook.md` |
 | Making a change to a production host | `change-management-checklist.md` |
 | Patching | `patch-management-guide.md` |
 | Adding a container or a hostname | `add-a-service.md`, `add-a-vhost.md` (homelab-public) |
 | Standing up a new server | `new-server-bootstrap-checklist.md` |
+| A major-version upgrade on a single-node hypervisor | `hypervisor-major-upgrade-runbook.md` |
 | Rotating a credential | `secret-rotation-runbook.md`, or `rotate-a-secret.md` (homelab-public) |
+| Designing a backup | `backup-3-2-1-runbook.md` |
+| Writing a disaster recovery plan | `disaster-recovery-plan-template.md` |
 | Testing backups | `backup-dr-testing-runbook.md` |
+| Auditing a NAS | `nas-hardening-audit-runbook.md` |
 | After an incident | `incident-postmortem-template.md` |
 | Reverse proxy with SSO | `reverse-proxy-sso-runbook.md` |
 
@@ -55,6 +60,10 @@ Read only the runbook that matches. If it cannot be fetched, use the summary bel
 If the category is unknown, `troubleshooting-flowchart.md` gives the triage order: can you SSH in (if not, network), then CPU load against core count, then memory and swap, then disk near 100 percent, and if none of those, recent changes, then logs. `troubleshooting-guide.md` is the symptom reference.
 
 Two habits from his posts apply while diagnosing. When every tool says the state is fine except the one that is failing, ask the authoritative source (the authoritative nameserver, the authorization side's own rule list), not a cache or a summary. And test the way a real user hits it, since a request from inside the LAN or an authenticated session can pass for a different reason. See "Troubleshooting" in `OPINIONS.md`.
+
+### A filesystem is full
+
+`disk-full-emergency-runbook.md` is a stop-the-bleeding procedure, same file name in both repos. Confirm which filesystem with `df -hP`, and check `df -iP` too, since "no space left" with bytes free means inode exhaustion, not disk exhaustion. The usual trap is a deleted-but-still-open file: `du` will not see it, but `df` keeps counting it until the process holding it closes or is restarted; find it with `lsof -nP +L1`. Free space in order: the systemd journal (`journalctl --vacuum-size=`), package caches, old rotated logs, then Docker's own layers (`docker system df` before `docker system prune`). Never delete a database's WAL or binlog files by hand; free space elsewhere first and let it checkpoint. If nothing frees enough, grow the filesystem (`lvextend -r`) or move a directory to another filesystem and bind-mount it back. Afterward, alert on 80 percent and on the fill rate, not only a hard threshold.
 
 ### Cannot get in
 
@@ -85,13 +94,27 @@ Before adding a new tool at all, check whether something already running does th
 
 `new-server-bootstrap-checklist.md` is ordered on purpose: lock down access first, then build. Access, baseline system, observability so problems are not invisible, backups before there is data to lose, a hardening pass (`server-hardening-checklist.md`), then document it.
 
+### A major-version upgrade on a single-node hypervisor
+
+`hypervisor-major-upgrade-runbook.md` is Linux-only: it covers a single-node host (Proxmox VE, XCP-ng, plain KVM, standalone ESXi) with no cluster or live migration to fall back on, so it is a scheduled window, not a live click. Get fully current on the old major and reboot onto it first, run the platform's own readiness checker and fix every warning, then swap repositories and upgrade inside `tmux` so a dropped console does not kill it mid-upgrade. After reboot, check the storage layer before anything else, and do not run a one-way storage upgrade such as `zpool upgrade` until the host has been stable for about a week, since that step burns the rollback path. Guests are safe regardless if their backups were verified beforehand; the host's own rollback is booting the retained previous kernel.
+
 ### Rotating a credential
 
 Both rotation runbooks start with an inventory: a secret is rarely in one file. Know how each consumer reloads (a systemd environment variable needs a daemon reload and restart; a container `env_file` needs `up -d`, since a plain `restart` does not re-read it). Prefer rotation with an overlap window: issue the new credential alongside the old, update every consumer, verify each on the new value, confirm the old one has had no use for a full business cycle, then revoke it.
 
-### Testing backups
+### Backups and disaster recovery
 
-`backup-dr-testing-runbook.md`: define what "recovered" means first (what must come back, the acceptable data loss window, the acceptable downtime). Restore a real, recent backup, not a prepared one, into an isolated environment and never over production. Time it and note every manual step. Verify the data by starting the database or application against it, not by checking that a file is non-empty. Record the results and fix what you found. A first test that finds nothing is a signal to look harder. `backup-strategy.md` in homelab-public shows how he states what his own design does not cover.
+Three different jobs, in order, each with its own doc.
+
+Designing the backup itself is `backup-3-2-1-runbook.md`: three copies, two kinds of media or location, one off-site, and every layer encrypted before it leaves the host. The box being backed up holds only the public key; lose the private key and the archives are noise. A `--delete` mirror is called out as a footgun, since a bad write propagates to the copy on the next run: prefer snapshots on the target, or a time-limited trash directory as the weaker fallback.
+
+Writing the recovery plan, before an incident forces it, is `disaster-recovery-plan-template.md`. It starts from two numbers per service, set honestly rather than aspirationally: RPO, how much data loss is acceptable, and RTO, how long recovery is allowed to take. Then a dependency order for recovering services: core infrastructure and data stores first, monitoring restored early enough to watch the rest of the recovery, not last.
+
+Testing that a backup actually works is `backup-dr-testing-runbook.md`: define what "recovered" means first (what must come back, the acceptable data loss window, the acceptable downtime). Restore a real, recent backup, not a prepared one, into an isolated environment and never over production. Time it and note every manual step. Verify the data by starting the database or application against it, not by checking that a file is non-empty. Record the results and fix what you found. A first test that finds nothing is a signal to look harder. `backup-strategy.md` in homelab-public shows how he states what his own design does not cover.
+
+### Auditing a NAS
+
+`nas-hardening-audit-runbook.md` is Linux-only, written for a consumer or prosumer NAS (Synology, QNAP, TrueNAS, or a roll-your-own), organized by where each check lives in a typical NAS UI. Note the RAID level: a striped volume or a JBOD span has zero redundancy, one disk lost is all the data on that pool lost. A scrub that is scheduled but has not actually passed recently is a silent risk, and a mirror to a second NAS is not a snapshot, since an `rsync --delete` mirror propagates a bad write on the next run; snapshots on the target are the real point-in-time recovery. Disable the default admin account, require MFA on every admin account, keep the management UI off any untrusted network, and turn off protocols nothing uses (AFP, Telnet, SMB1). Redo it quarterly.
 
 ### After an incident
 
