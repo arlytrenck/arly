@@ -4,11 +4,15 @@
 # Usage: scripts/coverage.sh [-h]
 #
 # Reads the file lists of sysadmin-linux, sysadmin-windows, and homelab-public
-# from GitHub and reports two things:
+# from GitHub and reports three things:
 #   1. Scripts in those repos that TOOLS.md does not mention.
 #   2. File names that TOOLS.md or ENTRY.md cite that no longer exist in them.
-# Docs are checked only for existence when cited, not for completeness.
-# It never edits anything. Run it during a refresh, after scripts/check.sh.
+#   3. Runbooks, checklists, or templates TOOLS.md names that ENTRY.md never
+#      cites anywhere, so a matching situation would have nothing to route to.
+# Docs are otherwise checked only for existence when cited, not for
+# completeness: a cheatsheet or reference doc TOOLS.md leaves out is not an
+# error the way an unrouted runbook is. It never edits anything. Run it
+# during a refresh, after scripts/check.sh.
 #
 # Options:
 #   -h    Show this help and exit.
@@ -77,6 +81,13 @@ missing = sorted((r, n) for n, r in scripts.items() if n not in tools)
 cited = set(re.findall(r"`([A-Za-z0-9._/-]+\.(?:md|sh|ps1))`", tools + "\n" + entry))
 dead = sorted(n for n in (os.path.basename(c) for c in cited) if n not in existing and n not in own)
 
+# A "situation doc": a runbook, checklist, or template TOOLS.md names. If
+# ENTRY.md never mentions it anywhere, a real situation has nothing to route
+# to, which is a routing gap, not just a missing citation.
+situation_docs = sorted(set(re.findall(
+    r"`([a-z0-9.-]+-(?:runbook|checklist|template)\.md)`", tools)))
+unrouted = [d for d in situation_docs if d not in entry]
+
 status = 0
 if missing:
     status = 1
@@ -90,7 +101,15 @@ if dead:
     print("File names cited in TOOLS.md or ENTRY.md that do not exist in the public repos:")
     for name in dead:
         print(f"  {name}")
+if unrouted:
+    status = 1
+    if missing or dead:
+        print()
+    print("Runbooks/checklists/templates TOOLS.md names that ENTRY.md never routes to:")
+    for name in unrouted:
+        print(f"  {name}")
 if status == 0:
-    print(f"coverage.sh: clean ({len(scripts)} scripts listed, {len(cited)} cited names exist)")
+    print(f"coverage.sh: clean ({len(scripts)} scripts listed, {len(cited)} cited names exist, "
+          f"{len(situation_docs)} situation docs all routed)")
 sys.exit(status)
 PY
