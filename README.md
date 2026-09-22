@@ -13,7 +13,7 @@ Hi, I'm [Arly Trenck](https://trenck.net). I'm an IT systems engineer and infras
 ## Install
 
 ```sh
-npx skills add arlytrenck/arly -g
+npx skills add arlytrenck/arly-skill -g
 ```
 
 Then ask it something:

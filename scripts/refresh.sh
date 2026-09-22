@@ -41,7 +41,7 @@ main() {
   export LC_ALL=C
 
   local owner="arlytrenck"
-  local self_repo="arly"
+  local self_repo="arly-skill"
   local -a public_repos=(sysadmin-linux sysadmin-windows homelab-public arlytrenck)
   local feed="https://trenck.net/blog/feed.xml"
   local stale_days="${ARLY_STALE_DAYS:-14}"

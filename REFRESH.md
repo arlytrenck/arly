@@ -64,9 +64,9 @@ A refresh is due when a new post goes live or a repo becomes public. Commits to 
 
 On the host that runs the schedule:
 
-1. `git clone https://github.com/arlytrenck/arly.git ~/arly-check`. The repo is public, so no credentials are needed.
+1. `git clone https://github.com/arlytrenck/arly-skill.git ~/arly-skill-check`. The repo is public, so no credentials are needed.
 2. Optional: create `~/.config/arly-refresh/env` containing `ARLY_NOTIFY=<path to a notifier>`. The notifier is called as `NOTIFY -t TITLE -p 4 -m MESSAGE`. Without it, the result is only visible in the scheduler's run history.
-3. Schedule `git pull --ff-only` followed by `scripts/refresh.sh check` in `~/arly-check`.
+3. Schedule `git pull --ff-only` followed by `scripts/refresh.sh check` in `~/arly-skill-check`.
 4. Run `scripts/refresh.sh check` by hand once to confirm it reports "up to date".
 
 Exit codes for `check`: `0` whether or not a refresh is due, `2` setup problem or no baseline, `3` a public source could not be read. A non-zero exit shows as a failed run in the scheduler.
