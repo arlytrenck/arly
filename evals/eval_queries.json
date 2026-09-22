@@ -1,0 +1,27 @@
+[
+  { "query": "/arly why does my new reverse-proxy vhost return 403 for everyone?", "should_trigger": true },
+  { "query": "how should I roll out MFA to a multi-site company without locking everyone out", "should_trigger": true },
+  { "query": "disk is filling up on the prod db host, df says 100% but du doesn't add up anywhere close, what do I do", "should_trigger": true },
+  { "query": "is my backup setup actually a backup, or just a mirror to a second NAS", "should_trigger": true },
+  { "query": "we got paged for the api service being down, walk me through triage", "should_trigger": true },
+  { "query": "whats arlys take on alerting on everything vs a handful of alerts you trust", "should_trigger": true },
+  { "query": "need to patch a fleet of ubuntu servers this week, whats a safe rollout order", "should_trigger": true },
+  { "query": "cant ssh into the domain controller and the console is unresponsive, is this a break glass situation", "should_trigger": true },
+  { "query": "writing a DR plan for our core services, what numbers do i need to nail down first", "should_trigger": true },
+  { "query": "which of your scripts audits ssh keys across a fleet", "should_trigger": true },
+  { "query": "standing up a brand new server tomorrow, whats the order of operations", "should_trigger": true },
+  { "query": "quarterly NAS audit is due, what should I actually be checking on the synology", "should_trigger": true },
+
+  { "query": "whats the weather in hartford today", "should_trigger": false },
+  { "query": "can you write a python script that reads a csv and uploads each row to our postgres database", "should_trigger": false },
+  { "query": "help me write a resignation letter, keep it short", "should_trigger": false },
+  { "query": "explain how a tcp handshake works for a presentation im giving", "should_trigger": false },
+  { "query": "can you review this pull request for style issues before I merge it", "should_trigger": false },
+  { "query": "whats a good name for my new saas startup", "should_trigger": false },
+  { "query": "quickest way to convert this json file to yaml", "should_trigger": false },
+  { "query": "summarize this pdf contract for me in three bullets", "should_trigger": false },
+  { "query": "recommend a monitor for my desk setup, something 27 inch and not too expensive", "should_trigger": false },
+  { "query": "need to change the oil in my car, whats the interval supposed to be", "should_trigger": false },
+  { "query": "draft a marketing email announcing our new product launch", "should_trigger": false },
+  { "query": "whats the difference between a list and a tuple in python", "should_trigger": false }
+]
