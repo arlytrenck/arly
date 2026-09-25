@@ -4,8 +4,8 @@ A compact map of Arly Trenck's viewpoints, taken only from what he has published
 
 Where an entry says "Arly's practice", it is describing what he does on his own systems. Where it says "Arly thinks", it is a stated view. Do not present either as more than that.
 
-_Last updated: 2026-09-21_
-_Sources: 7 published blog posts (2026-09-08 through 2026-09-21), `homelab-public` docs, `sysadmin-linux` and `sysadmin-windows` READMEs, CONTRIBUTING, and `docs/`, the profile README._
+_Last updated: 2026-09-25_
+_Sources: 8 published blog posts (2026-09-08 through 2026-09-25), `homelab-public` docs, `sysadmin-linux` and `sysadmin-windows` READMEs, CONTRIBUTING, and `docs/`, the profile README._
 
 ## Monitoring and alerting
 
@@ -79,7 +79,7 @@ Evidence: https://trenck.net/blog/authelia-two-file-access-control-bug/ and http
 
 ### One baseline on every service
 
-Every service in his stack sets `no-new-privileges`, a restart policy, a healthcheck, a timezone, and log rotation. Every service has a memory limit and a process limit, sized as ceilings at roughly three to four times observed use. Ports publish on `127.0.0.1` behind a reverse proxy, or on a specific LAN address, never `0.0.0.0`. Databases get a long stop grace period so they checkpoint cleanly.
+Every service in his stack sets `no-new-privileges`, a restart policy, a healthcheck, a timezone, and log rotation. Every service has a memory limit and a process limit, sized as ceilings at roughly three to four times observed use. Ports publish on `127.0.0.1` behind a reverse proxy, or on a specific LAN address, never `0.0.0.0`. Databases get a long stop grace period so they checkpoint cleanly. A service that skips part of the baseline carries a comment saying why (a distroless image with no shell for a healthcheck, the alert path kept off auto-restart), and a service that drifts from it without one is treated as a bug.
 Evidence: https://github.com/arlytrenck/homelab-public#conventions
 
 ### Secrets stay out of tracked files, and out of scratch files
@@ -133,8 +133,8 @@ Evidence: https://trenck.net/blog/watchtower-to-renovate/
 
 ### An update should arrive as a diff, a CI run, and a changelog
 
-A phone notification that an image tag moved says nothing about what changed, does not check that the new version starts, and leaves no record. He moved image updates to Renovate pull requests that run the existing validation workflow before he merges. Nothing auto-applies: the `docker compose up -d` is always a deliberate human action.
-Evidence: https://trenck.net/blog/watchtower-to-renovate/ and https://github.com/arlytrenck/homelab-public/blob/main/docs/hardening-conventions.md
+A phone notification that an image tag moved says nothing about what changed, does not check that the new version starts, and leaves no record. He moved image updates to Renovate pull requests that run the existing validation workflow before he merges. Nothing auto-applies: the `docker compose up -d` is always a deliberate human action. The CI that gates those PRs is held to the same bar: third-party GitHub Actions are pinned to a commit SHA with the version in a comment, and Renovate bumps the pins, since a repo meant to show a hardened setup should not leave its own CI supply chain on mutable tags.
+Evidence: https://trenck.net/blog/watchtower-to-renovate/ and https://github.com/arlytrenck/homelab-public/blob/main/CHANGELOG.md
 
 ### Let the grouping encode the judgment calls
 
@@ -179,6 +179,11 @@ Evidence: https://github.com/arlytrenck/homelab-public/blob/main/docs/backup-str
 
 His scripts are built to be read: each documents its own options, and the PowerShell ones carry comment-based help and `-WhatIf`. Contributions are held to the same bar: match the header style, fail safely, prefer erroring out to guessing, and put destructive actions behind an explicit flag.
 Evidence: https://github.com/arlytrenck/sysadmin-linux#why-this-repo-exists and https://github.com/arlytrenck/sysadmin-linux/blob/main/CONTRIBUTING.md
+
+### Keep the explanation inside the thing it explains
+
+Arly thinks a separate notes document goes stale because nothing forces it to change when the script does. What stays accurate is the header and comments in the script itself: what it does, why a flag is set that way, what broke the last time someone tried the obvious alternative. Editing code while leaving the explanation beside it untouched feels wrong in a way that ignoring a wiki page never does. This covers operational detail, not architecture: diagrams and why a system exists still need their own writing. His test: if he cannot tell what a script does and why from the script itself six months later, the gap is in the script.
+Evidence: https://trenck.net/blog/the-best-documentation-you-never-have-to-read/
 
 ### The docs get opened more than the scripts get run
 

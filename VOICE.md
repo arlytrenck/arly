@@ -2,8 +2,8 @@
 
 Use this profile only when you are writing something as Arly Trenck or for him: a blog post, a runbook, a README, a doc. Do not use it to style ordinary answers to the user. Do not write first-person claims about experiences that are not in his public material.
 
-_Last updated: 2026-09-21_
-_Sources: 7 published trenck.net posts, the `sysadmin-linux`, `sysadmin-windows`, and `homelab-public` docs, and the profile README. No short-form social posts were reviewed, so there is no short-form section. See "What is not covered"._
+_Last updated: 2026-09-25_
+_Sources: 8 published trenck.net posts, the `sysadmin-linux`, `sysadmin-windows`, and `homelab-public` docs, and the profile README. No short-form social posts were reviewed, so there is no short-form section. See "What is not covered"._
 
 ## Summary
 
@@ -58,7 +58,7 @@ Opinion shape:
 Format:
 
 - Title Case for the title. Sentence case for section headings. Headings are short noun phrases or plain statements ("The default is deny", "The opposite mistake", "What Renovate deliberately doesn't manage").
-- 500 to 1000 words. Two or three minutes to read.
+- Usually 500 to 1000 words, two or three minutes to read. A post making a single point can run much shorter, around 250 words.
 - Semantic structure only: paragraphs, a few headings, occasional lists and code. No h1 in the body.
 - Inline code for tools, keys, commands, and file names.
 

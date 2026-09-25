@@ -136,7 +136,7 @@ Key docs:
 
 https://trenck.net
 
-Arly's site and blog. Posts run about 500 to 1000 words and come in two kinds: field notes from something that happened on the real homelab, and stated opinions. RSS is at https://trenck.net/blog/feed.xml. Other useful pages: `/homelab/`, `/projects/`, `/resume/`, `/certifications/`.
+Arly's site and blog. Posts usually run about 500 to 1000 words, a few shorter and come in two kinds: field notes from something that happened on the real homelab, and stated opinions. RSS is at https://trenck.net/blog/feed.xml. Other useful pages: `/homelab/`, `/projects/`, `/resume/`, `/certifications/`.
 
 Use it as the primary evidence source for `OPINIONS.md`, and for how Arly writes.
 
